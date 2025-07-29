@@ -4,7 +4,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 async function analyzeTranscript(transcript, pros = [], objections = []) {
   const prompt = `
 Analyze the following sales call transcript:
-1. Give a pitch score (0–100).
+1. Give a pitch score (0–10).
 2. Identify any 1–2 missed USPs from this list: ${pros.join(", ") || "None"}
 3. What was the customer's top objection (from: ${objections.join(", ") || "None"})?
 

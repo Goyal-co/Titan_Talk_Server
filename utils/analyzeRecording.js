@@ -4,7 +4,7 @@ const { OpenAI } = require("openai");
 const ffmpeg = require("fluent-ffmpeg");
 
 // Set the path to the FFmpeg binary
-const ffmpegPath = path.join(process.env.USERPROFILE, 'Downloads', 'ffmpeg', 'ffmpeg-master-latest-win64-gpl', 'bin', 'ffmpeg.exe');
+const ffmpegPath = path.join(os.homedir(), 'Downloads', 'ffmpeg', 'ffmpeg-master-latest-win64-gpl', 'bin', 'ffmpeg.exe');
 console.log('🔧 Using FFmpeg from:', ffmpegPath);
 
 // Configure FFmpeg path
