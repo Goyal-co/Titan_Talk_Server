@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { OpenAI } = require("openai");
 const ffmpeg = require("fluent-ffmpeg");
+const os = require("os");
 
 // Set the path to the FFmpeg binary
 const ffmpegPath = path.join(os.homedir(), 'Downloads', 'ffmpeg', 'ffmpeg-master-latest-win64-gpl', 'bin', 'ffmpeg.exe');
