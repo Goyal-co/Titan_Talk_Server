@@ -12,7 +12,13 @@ const adminRoutes = require("./routes/adminRoutes");
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://titan-talk.vercel.app',
+    'http://localhost:5173'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // ✅ Recordings now served from Firebase Storage - no local static serving needed
