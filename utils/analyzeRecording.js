@@ -220,7 +220,6 @@ function extractProsMentioned(analysis) {
 }
 
 const downloadFile = require('./downloadFile');
-const os = require('os');
 
 // Main analysis function
 async function analyzeRecording(originalPath, projectName = null) {
