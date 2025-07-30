@@ -163,22 +163,22 @@ router.get("/dashboard", async (req, res) => {
       .sort((a, b) => a.period.localeCompare(b.period));
     
     // If no data for the current period, ensure we have at least the current period
-    const today = new Date();
+    const currentDate = new Date();
     let currentPeriod;
     
     switch(period) {
       case 'week':
-        const weekNum = Math.ceil((((today - new Date(today.getFullYear(), 0, 1)) / 86400000) + 1) / 7);
-        currentPeriod = `${today.getFullYear()}-W${weekNum.toString().padStart(2, '0')}`;
+        const weekNum = Math.ceil((((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000) + 1) / 7);
+        currentPeriod = `${currentDate.getFullYear()}-W${weekNum.toString().padStart(2, '0')}`;
         break;
       case 'month':
-        currentPeriod = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}`;
+        currentPeriod = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}`;
         break;
       case 'year':
-        currentPeriod = today.getFullYear().toString();
+        currentPeriod = currentDate.getFullYear().toString();
         break;
       default: // day
-        currentPeriod = today.toISOString().slice(0, 10);
+        currentPeriod = currentDate.toISOString().slice(0, 10);
     }
     
     if (!groupedData[currentPeriod]) {
@@ -187,7 +187,7 @@ router.get("/dashboard", async (req, res) => {
         score: 0,
         count: 0,
         label: period === 'day' 
-          ? today.toLocaleDateString('en-US', { weekday: 'short' })
+          ? currentDate.toLocaleDateString('en-US', { weekday: 'short' })
           : currentPeriod
       });
     }
