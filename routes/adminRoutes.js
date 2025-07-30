@@ -56,6 +56,45 @@ router.get("/dashboard", async (req, res) => {
     const topObjection = Object.entries(objectionMap).sort((a, b) => b[1] - a[1])?.[0]?.[0] || "Need more time to decide";
     const totalObjections = Object.values(objectionMap).reduce((sum, count) => sum + count, 0);
 
+    // Project-wise top objections - using allRecordings for comprehensive data
+    const allProjectsSet = new Set();
+    const projectObjectionMap = {};
+    
+    // First pass: collect all unique projects with at least one recording
+    allRecordings.forEach(r => {
+      if (r.project) {
+        allProjectsSet.add(r.project);
+        if (!projectObjectionMap[r.project]) {
+          projectObjectionMap[r.project] = {};
+        }
+      }
+    });
+    
+    // Second pass: count objections across all recordings
+    allRecordings.forEach(r => {
+      if (r.project && r.topObjection && r.topObjection !== 'None' && r.topObjection !== 'Analysis failed') {
+        projectObjectionMap[r.project][r.topObjection] = (projectObjectionMap[r.project][r.topObjection] || 0) + 1;
+      }
+    });
+    
+    // If no projects found, check recentRecordings as fallback
+    if (allProjectsSet.size === 0) {
+      recentRecordings.forEach(r => {
+        if (r.project) allProjectsSet.add(r.project);
+      });
+    }
+    const projectObjections = Array.from(allProjectsSet).map(project => {
+      const objections = projectObjectionMap[project];
+      // Build a sorted array of objections for this project
+      const objectionsArr = Object.entries(objections)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count);
+      return {
+        project,
+        objections: objectionsArr.length > 0 ? objectionsArr : [{ name: "None", count: 0 }]
+      };
+    });
+
     // Prepare chart data
     const chartData = {
       objectionBreakdown: Object.entries(objectionMap).map(([name, count]) => ({ name, count })),
@@ -73,7 +112,8 @@ router.get("/dashboard", async (req, res) => {
       topObjections: topObjection,
       totalObjections,
       recent: recentRecordings,
-      chartData
+      chartData,
+      projectObjections
     });
   } catch (err) {
     console.error("Error fetching dashboard stats:", err);
